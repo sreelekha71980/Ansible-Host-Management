@@ -3,4 +3,4 @@
 192.168.29.25
 
 [Windows]
-192.168.29.166 ansible_connection=winrm
+192.168.29.166 ansible_connection=winrm ansible_winrm_scheme: http
