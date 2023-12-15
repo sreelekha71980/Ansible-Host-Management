@@ -3,4 +3,4 @@
 192.168.29.25
 
 [Windows]
-192.168.29.166 ansible_connection=winrm ansible_winrm_scheme=http ansible_winrm_port=5985 ansible_winrm_server_cert_validation=ignore ansible_winrm_transport=basic
+192.168.29.166
