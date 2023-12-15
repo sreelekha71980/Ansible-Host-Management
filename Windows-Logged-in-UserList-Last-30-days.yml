@@ -1,0 +1,32 @@
+---
+- name: Get Logged-In Users for Last 30 Days and Send Email
+  hosts: all
+  gather_facts: no
+  become: false
+  tasks:
+    - name: Get Logged-In Users for Last 30 Days
+      win_shell: |
+        $startDate = (Get-Date).AddDays(-30)
+        $loggedUsers = Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624; StartTime=$startDate} |
+                       Where-Object { $_.Properties[8].Value -ne $null } |
+                       ForEach-Object { $_.Properties[8].Value }
+        $loggedUsers | Out-File -FilePath "C:\Temp\logged_in_users_last_30_days.csv"
+      register: result
+    #print output to console
+    - name: Display Logged-In Users
+      debug:
+        var: result.stdout_lines
+
+    #- name: Send Email with Logged-In Users
+    #  mail:
+    #    host: your_smtp_server
+    #    port: your_smtp_port
+    #    username: your_smtp_username
+    #    password: your_smtp_password
+    #    to: recipient@example.com
+    #    subject: "Logged-In Users (Last 30 Days) Report"
+    #    body: "Attached is the list of logged-in users on Windows for the last 30 days."
+    #    attach:
+    #      - path: "C:\Temp\logged_in_users_last_30_days.csv"
+    #        filename: "logged_in_users_last_30_days.csv"
+    #
