@@ -14,7 +14,6 @@
       with_items:
         - { name: 'user1', password: 'password1', groups: ['Users'] }
         - { name: 'user2', password: 'password2', groups: ['Users'] }
-		- { name: 'user3', password: 'password3', groups: ['Users'] }
-		- { name: 'user4', password: 'password4', groups: ['Users'] }
-		- { name: 'user5', password: 'password5', groups: ['Users'] }
-        # Add more users as needed
+        - { name: 'user3', password: 'password3', groups: ['Users'] }
+        - { name: 'user4', password: 'password4', groups: ['Users'] }
+        - { name: 'user5', password: 'password5', groups: ['Users'] }
