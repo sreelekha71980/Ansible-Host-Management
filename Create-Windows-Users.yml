@@ -1,0 +1,20 @@
+---
+- name: Create Users on Windows
+  hosts: all
+  become: false
+  gather_facts: no  # We don't need to gather facts for user creation
+
+  tasks:
+    - name: Create Users
+      win_user:
+        name: "{{ item.name }}"
+        password: "{{ item.password }}"
+        state: present
+        groups: "{{ item.groups | default([]) }}"
+      with_items:
+        - { name: 'user1', password: 'password1', groups: ['Users'] }
+        - { name: 'user2', password: 'password2', groups: ['Users'] }
+		- { name: 'user3', password: 'password3', groups: ['Users'] }
+		- { name: 'user4', password: 'password4', groups: ['Users'] }
+		- { name: 'user5', password: 'password5', groups: ['Users'] }
+        # Add more users as needed
