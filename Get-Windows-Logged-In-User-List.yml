@@ -1,0 +1,16 @@
+---
+- name: Get Logged-In Users on Windows
+  hosts: all
+  gather_facts: no
+  become: false
+  
+  tasks:
+    - name: Get Logged-In Users
+      win_shell: |
+        $loggedUsers = Get-WmiObject -Query "Select * from Win32_ComputerSystem" | Select-Object -ExpandProperty UserName
+        $loggedUsers
+      register: result
+
+    - name: Display Logged-In Users
+      debug:
+        var: result.stdout_lines
