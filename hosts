@@ -4,6 +4,7 @@
 
 [Windows]
 192.168.29.166
+192.168.29.168
 
 [Windows:vars]
 ansible_connection=winrm
