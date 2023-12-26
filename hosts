@@ -11,4 +11,5 @@ ansible_connection=winrm
 ansible_winrm_scheme=http
 ansible_winrm_port=6001
 ansible_winrm_server_cert_validation=ignore
-ansible_winrm_transport=ntlm
+ansible_winrm_transport=kerberos
+
