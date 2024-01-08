@@ -13,6 +13,7 @@
             Id=4624;
             StartTime=$startDate
         } | Where-Object { 
+            ($_.Properties[8].Value -eq 2 -or $_.Properties[8].Value -eq 10) -and
             $_.Properties[5].Value -notmatch "($([string]::Join('|', $excludedUsers)))"
         } | Select-Object @{
             Name='Login-Date'; Expression={$_.TimeCreated.ToString("yyyy-MM-dd")}
