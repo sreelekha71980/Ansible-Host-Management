@@ -6,7 +6,7 @@
     - name: Get Logon Information
       win_shell: |
         $startDate = (Get-Date).AddDays(-30)
-        $excludedUsers = 'DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD'
+        $excludedUsers = @('DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD')
         
         $loginInfo = Get-WinEvent -FilterHashtable @{
             LogName='Security';
@@ -14,7 +14,7 @@
             StartTime=$startDate
         } | Where-Object { 
             ($_.Properties[8].Value -eq 2 -or $_.Properties[8].Value -eq 10) -and
-            $_.Properties[5].Value -notin "($([string]::Join('|', $excludedUsers)))"
+            $_.Properties[5].Value -notmatch "($([string]::Join('|', $excludedUsers)))"
         } | Select-Object @{
             Name='Login-Date'; Expression={$_.TimeCreated.ToString("yyyy-MM-dd")}
         }, @{
@@ -35,24 +35,14 @@
                     11 { 'CachedInteractive' }
                     default { $_.Properties[8].Value }
                 }
-            }}, @{
+            }
+        }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
-        }}
-        
+        }
+
         $loginInfo
       register: result
+
     - name: Display result to Console
       debug:
         var: result.stdout_lines
- #     community.general.mail:
- #       host: your_smtp_server
- #       port: 25  # Change it if needed
- #   - name: Send Email with CSV Attachment
- #       subject: "Logon Information Report"
- #       body: "Please find the attached CSV file with logon information for the last 30 days."
- #       from: your_email@example.com
- #       to: recipient@example.com
- #       username: your_smtp_username
- #       password: your_smtp_password
- #       attachments:
- #         - C:\path\to\output.csv
