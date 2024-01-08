@@ -1,0 +1,31 @@
+---
+- name: Fetch Interactive and Remote Login Information for Past 30 Days on Windows Desktops
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get Login Information
+      win_shell:
+        $startDate = (Get-Date).AddDays(-30)
+        Get-WinEvent -LogName Security -FilterHashtable @{LogName='Security'; ID=4624; StartTime=$startDate} |
+        ForEach-Object {
+          $xml = [xml]$_.ToXml()
+          $eventProperties = $xml.Event.EventData.Data
+          $logonType = $eventProperties | Where-Object { $_.Name -eq 'LogonType' } | Select-Object -ExpandProperty '#text'
+
+          if ($logonType -eq '2' -or $logonType -eq '10') {
+            $username = $eventProperties | Where-Object { $_.Name -eq 'TargetUserName' } | Select-Object -ExpandProperty '#text'
+            $date = $_.TimeCreated
+            $computerName = $eventProperties | Where-Object { $_.Name -eq 'WorkstationName' } | Select-Object -ExpandProperty '#text'
+            [PSCustomObject]@{
+              LogonType = $logonType
+              Username = $username
+              Date = $date
+              ComputerName = $computerName
+            }
+          }
+        }
+      register: login_information
+
+    - name: Display Login Information
+      debug:
+        var: login_information.stdout_lines
