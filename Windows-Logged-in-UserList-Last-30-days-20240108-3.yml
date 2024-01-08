@@ -38,7 +38,7 @@
             }
         }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
-        }
+        } | Format-Table
 
         $loginInfo
       register: result
