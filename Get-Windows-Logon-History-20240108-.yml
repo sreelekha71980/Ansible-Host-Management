@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Get Logon Information
-      ansible.builtin.win_shell: |
+      ansible.builtin.win_shell:
         $startDate = (Get-Date).AddDays(-30)
         $excludedUsers = 'DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD'
         
