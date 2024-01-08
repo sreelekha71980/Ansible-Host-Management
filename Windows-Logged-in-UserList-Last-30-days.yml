@@ -10,7 +10,7 @@
         $loggedUsers = Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624; StartTime=$startDate} |
                        Where-Object { $_.Properties[8].Value -ne $null } |
                        ForEach-Object { $_.Properties[8].Value }
-    #    $loggedUsers | Out-File -FilePath "C:\Temp\logged_in_users_last_30_days.csv"
+        $loggedUsers 
       register: result
     #print output to console
     - name: Display Logged-In Users
