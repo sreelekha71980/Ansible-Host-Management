@@ -6,7 +6,7 @@
   
   tasks:
     - name: Get Logged-In Users
-      win_shell:
+      win_shell: |
         $loggedUsers = Get-WmiObject -Query "Select * from Win32_ComputerSystem" | Select-Object -ExpandProperty UserName
         $loggedUsers
       register: result
