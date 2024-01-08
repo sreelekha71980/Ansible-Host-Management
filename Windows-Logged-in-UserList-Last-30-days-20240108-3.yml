@@ -1,6 +1,6 @@
 ---
 - name: Fetch Logon Information and Send Email
-  hosts: windows_pcs
+  hosts: all
   gather_facts: false
   tasks:
     - name: Get Logon Information
