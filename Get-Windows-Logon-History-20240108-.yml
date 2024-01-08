@@ -1,0 +1,58 @@
+---
+- name: Fetch Logon Information and Send Email
+  hosts: windows_pcs
+  gather_facts: false
+  tasks:
+    - name: Get Logon Information
+      ansible.builtin.win_shell: |
+        $startDate = (Get-Date).AddDays(-30)
+        $excludedUsers = 'DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD'
+        
+        $loginInfo = Get-WinEvent -FilterHashtable @{
+            LogName='Security';
+            Id=4624;
+            StartTime=$startDate
+        } | Where-Object { 
+            ($_.Properties[8].Value -eq 2 -or $_.Properties[8].Value -eq 10) -and
+            $_.Properties[5].Value -notmatch "($([string]::Join('|', $excludedUsers)))"
+        } | Select-Object @{
+            Name='Login-Date'; Expression={$_.TimeCreated.ToString("yyyy-MM-dd")}
+        }, @{
+            Name='Login-Time'; Expression={$_.TimeCreated.ToString("HH:mm:ss")}
+        }, MachineName, @{
+            Name='User'; Expression={$_.Properties[5].Value}
+        }, @{
+            Name='LogonType'; Expression={
+                switch ($_.Properties[8].Value) {
+                    2 { 'LocalInteractive' }
+                    3 { 'Network' }
+                    4 { 'Batch' }
+                    5 { 'Service' }
+                    7 { 'Unlock' }
+                    8 { 'NetworkCleartext' }
+                    9 { 'NewCredentials' }
+                    10 { 'RemoteInteractive' }
+                    11 { 'CachedInteractive' }
+                    default { $_.Properties[8].Value }
+                }
+            }
+        }, @{
+            Name='Source-IP'; Expression={$_.Properties[18].Value}
+        }
+
+        $loginInfo | Export-Csv -Path /tmp/output.csv -NoTypeInformation
+   #   register: login_information
+   #
+   # - name: Send Email with CSV Attachment
+   #   community.general.mail:
+   #     host: your_smtp_server
+   #     port: 25  # Change it if needed
+   #     subject: "Logon Information Report"
+   #     body: "Please find the attached CSV file with logon information for the last 30 days."
+   #     from: your_email@example.com
+   #     to: recipient@example.com
+   #     username: your_smtp_username
+   #     password: your_smtp_password
+   #     attachments:
+   #       - C:\path\to\output.csv
+   #
