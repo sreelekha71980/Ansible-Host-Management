@@ -48,10 +48,10 @@
     - name: Display result to Console
       debug:
         var: result.stdout_lines
-    - local_action: 
-      module: copy 
-      content: "{{ result.stdout_lines }}"
-      dest: /tmp/output-202401091103.csv		    
+- local_action: 
+  module: copy 
+  content: "{{ result.stdout_lines }}"
+  dest: /tmp/output-202401091103.csv		    
      
 #     delegate_to: localhost
 #    - name: Save output result to a file
