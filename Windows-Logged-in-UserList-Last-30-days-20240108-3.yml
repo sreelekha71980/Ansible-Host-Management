@@ -2,10 +2,12 @@
 - name: Fetch Logon Information and Send Email
   hosts: all
   gather_facts: false
+  vars:
+    output_csv_path: "/tmp/logon_info.csv"
   tasks:
     - name: Get Logon Information
       win_shell: |
-        $startDate = (Get-Date).AddDays(-30)
+        $startDate = (Get-Date).AddDays(-3)
         $excludedUsers = @('DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD')
         
         $loginInfo = Get-WinEvent -FilterHashtable @{
@@ -40,15 +42,15 @@
             Name='Source-IP'; Expression={$_.Properties[18].Value}
         } | Format-Table
 
-        $loginInfo
+        $loginInfo | Export-Csv -Path {{ output_csv_path }} -NoTypeInformation
       register: result
-
+      delegate_to: localhost
     - name: Display result to Console
       debug:
         var: result.stdout_lines
-    - name: Template CSV file
-      ansible.builtin.template:
-        src: templates/output_template.csv.j2
-        dest: /tmp/output-202401091103.csv
-      vars:
-        registered_output: "{{ result.stdout_lines }}" 
+#    - name: Template CSV file
+#      ansible.builtin.template:
+#        src: templates/output_template.csv.j2
+#        dest: /tmp/output-202401091103.csv
+#      vars:
+#        registered_output: "{{ result.stdout_lines }}" 
