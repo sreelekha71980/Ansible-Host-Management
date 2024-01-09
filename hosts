@@ -6,6 +6,7 @@
 Win10EPC01.MYLAB.LOCAL
 192.168.29.166
 192.168.29.168
+3.208.18.23
 
 [Windows:vars]
 ansible_connection=winrm
