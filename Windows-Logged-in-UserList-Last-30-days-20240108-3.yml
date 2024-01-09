@@ -42,12 +42,16 @@
             Name='Source-IP'; Expression={$_.Properties[18].Value}
         } | Format-Table
 
-        $loginInfo | Export-Csv -Path {{ output_csv_path }} -NoTypeInformation
+        $loginInfo
       register: result
       delegate_to: localhost
-    - name: Display result to Console
-      debug:
-        var: result.stdout_lines
+    - name: Save output result to a file
+      copy:
+        content: "{{ result.stdout_lines }}"
+        dest: "/tmp/output-202401091103.csv"                                                         
+#    - name: Display result to Console
+#      debug:
+#        var: result.stdout_lines
 #    - name: Template CSV file
 #      ansible.builtin.template:
 #        src: templates/output_template.csv.j2
