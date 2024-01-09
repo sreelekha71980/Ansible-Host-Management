@@ -44,7 +44,7 @@
 
         $loginInfo
       register: result
-      delegate_to: localhost
+#     delegate_to: localhost
     - name: Save output result to a file
       copy:
         content: "{{ result.stdout_lines }}"
