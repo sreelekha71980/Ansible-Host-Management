@@ -6,7 +6,7 @@
     output_csv_path: "/tmp/logon_info.csv"
   tasks:
     - name: Get Logon Information
-      win_shell: |
+      ansible.builtin.win_shell: |
         $startDate = (Get-Date).AddDays(-3)
         $excludedUsers = @('DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD')
         
@@ -40,29 +40,11 @@
             }
         }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
-        } | Format-Table
-
-        $loginInfo
-        dest: "/tmp/output-202401091103.csv"                                                         
+        }
       register: result
-    - name: Display result to Console
-      debug:
-        var: result.stdout_lines
-- local_action: 
-  module: copy 
-  content: "{{ result.stdout_lines }}"
-  dest: /tmp/output-202401091103.csv		    
-     
-#     delegate_to: localhost
-#    - name: Save output result to a file
-#      copy:
-#        content: "{{ result.stdout_lines }}"
-#    - name: Display result to Console
-#      debug:
-#        var: result.stdout_lines
-#    - name: Template CSV file
-#      ansible.builtin.template:
-#        src: templates/output_template.csv.j2
-#        dest: /tmp/output-202401091103.csv
-#      vars:
-#        registered_output: "{{ result.stdout_lines }}" 
+
+    - name: Save CSV File
+      ansible.builtin.copy:
+        content: "{{ result.stdout_lines | join('\n') }}"
+        dest: "{{ output_csv_path }}"
+        mode: '0644'
