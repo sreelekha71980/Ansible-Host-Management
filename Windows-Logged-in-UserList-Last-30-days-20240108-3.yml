@@ -2,8 +2,6 @@
 - name: Fetch Logon Information and Send Email
   hosts: all
   gather_facts: false
-  vars:
-    output_csv_path: "/tmp/logon_info.csv"
   tasks:
     - name: Get Logon Information
       ansible.builtin.win_shell: |
@@ -43,8 +41,14 @@
         }
       register: result
 
-    - name: Save CSV File
-      ansible.builtin.copy:
-        content: "{{ result.stdout_lines | join('\n') }}"
-        dest: "{{ output_csv_path }}"
-        mode: '0644'
+---
+- name: Save registered output to CSV file
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Template CSV file
+      ansible.builtin.template:
+        src: templates/output_template.csv.j2
+        dest: /tmp/output.csv
+      vars:
+        registered_output: "{{ result.stdout_lines }}"
