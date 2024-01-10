@@ -1,0 +1,20 @@
+---
+- name: Fetch Logon Information and Send Email
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get Logon Information
+      ansible.builtin.win_shell: |
+        $startDate = (Get-Date).AddDays(-3)
+        $loginInfo = Get-WinEvent -FilterHashtable @{
+            LogName='Security';
+            Id=4624;
+            StartTime=$startDate
+        } | Select-Object MachineName, @{Name='User'; Expression={$_.Properties[5].Value}}
+        $loginInfo
+#      register: result  
+#               
+#    - name: Display result to Console
+#      debug:
+#        var: result.stdout_lines
+#
