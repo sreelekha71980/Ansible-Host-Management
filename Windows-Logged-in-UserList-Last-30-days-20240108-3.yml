@@ -38,8 +38,8 @@
             }
         }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
-        } | FormatTable
-
+        } | Format-Table
+        $loginInfo
     - name: Display result to Console
       debug:
         var: result.stdout_lines
