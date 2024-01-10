@@ -5,7 +5,7 @@
   tasks:
     - name: Get Logon Information
       ansible.builtin.win_shell: |
-        $startDate = (Get-Date).AddDays(-3)
+        $startDate = (Get-Date).AddDays(-30)
         $excludedUsers = @('DWM', 'LOCAL SERVICE', 'NETWORK SERVICE', 'SYSTEM', 'UMFD')
         
         $loginInfo = Get-WinEvent -FilterHashtable @{
@@ -39,10 +39,10 @@
         }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
         } | Format-Table
-        
-      register: result  
         $loginInfo
-        
+      
+      register: result  
+               
     - name: Display result to Console
       debug:
         var: result.stdout_lines
