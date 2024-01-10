@@ -41,7 +41,6 @@
         }
       register: result
 
----
 - name: Save registered output to CSV file
   hosts: localhost
   gather_facts: false
