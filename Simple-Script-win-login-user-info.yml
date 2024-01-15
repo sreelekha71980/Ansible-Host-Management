@@ -11,7 +11,7 @@
             Id=4624;
             StartTime=$startDate
         } | Select-Object MachineName, @{Name='User'; Expression={$_.Properties[5].Value}}
-#        $loginInfo
+        $loginInfo
 #      register: result  
 #               
 #    - name: Display result to Console
