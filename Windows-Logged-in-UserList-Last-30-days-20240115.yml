@@ -58,7 +58,7 @@
       ansible.builtin.copy:
         content: "{{ userlist | join('\n') }}"
         dest: "{{ output_csv_path }}"
-
+      delegate_to: localhost
 - name: Display List of Files on Control Machine in /tmp
   hosts: localhost
   gather_facts: false
@@ -66,7 +66,7 @@
     - name: Display List of Files in /tmp
       ansible.builtin.shell: "ls -l /tmp"
       register: files_list
-
+      delegate_to: localhost
     - name: Display List of Files
       debug:
         var: files_list.stdout_lines
