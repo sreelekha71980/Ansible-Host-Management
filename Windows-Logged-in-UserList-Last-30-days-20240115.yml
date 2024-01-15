@@ -43,42 +43,30 @@
             Name='Source-IP'; Expression={$_.Properties[18].Value}
         }
 
-        $loginInfo | Export-Csv -Path {{ output_csv_path }} -NoTypeInformation
       delegate_to: localhost
       register: result
+
     - name: copy output of task1 to variable userlist
       set_fact:
-        userlist: "{{ result}}"
+        userlist: "{{ result.stdout_lines }}"
 
 - name: save output of task1 as csv on control machine
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Save Output as CSV on Control Machine
       ansible.builtin.copy:
-        content: "{{ result.stdout_lines | join('\n') }}"
+        content: "{{ userlist | join('\n') }}"
         dest: "{{ output_csv_path }}"
-      
+
 - name: Display List of Files on Control Machine in /tmp
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Display List of Files in a Path
+    - name: Display List of Files in /tmp
       ansible.builtin.shell: "ls -l /tmp"
       register: files_list
+
     - name: Display List of Files
       debug:
         var: files_list.stdout_lines
-
-#    - name: Send Email with CSV Attachment
-#      community.general.mail:
-#        host: your_smtp_server
-#        port: 25  # Change it if needed
-#        subject: "Logon Information Report"
-#        body: "Please find the attached CSV file with logon information for the last 30 days."
-#        from: your_email@example.com
-#        to: recipient@example.com
-#        username: your_smtp_username
-#        password: your_smtp_password
-#        attachments:
-#          - "{{ output_csv_path }}"
-
