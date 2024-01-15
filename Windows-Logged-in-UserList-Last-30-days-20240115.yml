@@ -45,8 +45,8 @@
 
 
       register: result
-       debug:
-        var: result.stdout_lines     
+      debug:
+       var: result.stdout_lines     
 #    - name: copy output of task1 to variable userlist
 #      set_fact:
 #        userlist: "{{ result.stdout_lines }}"
