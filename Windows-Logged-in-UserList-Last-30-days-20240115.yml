@@ -49,11 +49,12 @@
     - name: copy output of task1 to variable userlist
       set_fact:
         userlist: "{{ result.stdout_lines }}"
-      delegate_to: localhost
+        
 - name: save output of task1 as csv on control machine
   hosts: localhost
   gather_facts: false
   tasks:
+      delegate_to: localhost
     - name: Save Output as CSV on Control Machine
       ansible.builtin.copy:
         content: "{{ userlist | join('\n') }}"
