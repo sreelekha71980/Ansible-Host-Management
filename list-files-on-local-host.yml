@@ -1,32 +1,33 @@
 ---
-#- name: Display File Information or List Files
+- name: Display File Information or List Files
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display List of Files in a Path
+      ansible.builtin.shell: "ls -l /tmp;ip a "
+      register: files_list
+    - name: Display List of Files
+      debug:
+        var: files_list.stdout_lines
+
+#- name: save output of task1 as csv on control machine
 #  hosts: localhost
 #  gather_facts: false
 #  tasks:
-#    - name: Display List of Files in a Path
+#    - name: Save Output as CSV on Control Machine
+#      ansible.builtin.copy:
+#        content: "{{ userlist | join('\n') }}"
+#        dest: "{{ output_csv_path }}"
+#      delegate_to: localhost
+#- name: Display List of Files on Control Machine in /tmp
+#  hosts: localhost
+#  gather_facts: false
+#  tasks:
+#    - name: Display List of Files in /tmp
 #      ansible.builtin.shell: "ls -l /tmp"
 #      register: files_list
+#      delegate_to: localhost
 #    - name: Display List of Files
 #      debug:
 #        var: files_list.stdout_lines
 #
-- name: save output of task1 as csv on control machine
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Save Output as CSV on Control Machine
-      ansible.builtin.copy:
-        content: "{{ userlist | join('\n') }}"
-        dest: "{{ output_csv_path }}"
-      delegate_to: localhost
-- name: Display List of Files on Control Machine in /tmp
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Display List of Files in /tmp
-      ansible.builtin.shell: "ls -l /tmp"
-      register: files_list
-      delegate_to: localhost
-    - name: Display List of Files
-      debug:
-        var: files_list.stdout_lines
