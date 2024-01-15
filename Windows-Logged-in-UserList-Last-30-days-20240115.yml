@@ -1,6 +1,6 @@
 ---
 - name: Fetch Logon Information and Send Email
-  hosts: windows_pcs
+  hosts: all
   gather_facts: false
   vars:
     output_csv_path: "/tmp/logon_info.csv"
