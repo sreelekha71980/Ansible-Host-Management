@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Display List of Files in a Path
-      ansible.builtin.shell: "ls -l /tmp;ip a "
+      ansible.builtin.shell: "ls -l /tmp"
       register: files_list
     - name: Display List of Files
       debug:
