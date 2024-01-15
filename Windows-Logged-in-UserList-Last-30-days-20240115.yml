@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   vars:
-    output_csv_path: "$PWD"
+    output_csv_path: "/tmp/login-users.csv"
     userlist: "None"
   tasks:
     - name: Get Logon Information
