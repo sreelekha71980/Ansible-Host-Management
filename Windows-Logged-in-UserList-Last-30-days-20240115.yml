@@ -51,7 +51,7 @@
       delegate_to: localhost
     - name: print to console
       debug:
-        var: userlist
+        var: result.stdout_lines
         
 - name: Display List of Files on Control Machine in /tmp
   hosts: localhost
