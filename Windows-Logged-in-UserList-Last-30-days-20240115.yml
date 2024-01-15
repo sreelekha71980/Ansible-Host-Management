@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   vars:
-    output_csv_path: "/tmp/logon_info.csv"
+    output_csv_path: "$PWD"
 
   tasks:
     - name: Get Logon Information
@@ -50,23 +50,23 @@
         userlist: "{{ result.stdout_lines }}"
       delegate_to: localhost
 
-- name: save output of task1 as csv on control machine
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Save Output as CSV on Control Machine
-      ansible.builtin.copy:
-        content: "{{ userlist | join('\n') }}"
-        dest: "{{ output_csv_path }}"
-      delegate_to: localhost
-- name: Display List of Files on Control Machine in /tmp
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Display List of Files in /tmp
-      ansible.builtin.shell: "ls -l /tmp"
-      register: files_list
-      delegate_to: localhost
-    - name: Display List of Files
-      debug:
-        var: files_list.stdout_lines
+#- name: save output of task1 as csv on control machine
+#  hosts: localhost
+#  gather_facts: false
+#  tasks:
+#    - name: Save Output as CSV on Control Machine
+#      ansible.builtin.copy:
+#        content: "{{ userlist | join('\n') }}"
+#        dest: "{{ output_csv_path }}"
+#      delegate_to: localhost
+#- name: Display List of Files on Control Machine in /tmp
+#  hosts: localhost
+#  gather_facts: false
+#  tasks:
+#    - name: Display List of Files in /tmp
+#      ansible.builtin.shell: "ls -l /tmp"
+#      register: files_list
+#      delegate_to: localhost
+#    - name: Display List of Files
+#      debug:
+#        var: files_list.stdout_lines
