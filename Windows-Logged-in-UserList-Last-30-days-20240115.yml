@@ -46,6 +46,28 @@
         $loginInfo | Export-Csv -Path {{ output_csv_path }} -NoTypeInformation
       delegate_to: localhost
       register: result
+    - name: copy output of task1 to variable userlist
+      set_fact:
+        userlist: "{{ result}}"
+
+- name: save output of task1 as csv on control machine
+  hosts: localhost
+  gather_facts: false
+  tasks:
+      ansible.builtin.copy:
+        content: "{{ result.stdout_lines | join('\n') }}"
+        dest: "{{ output_csv_path }}"
+      
+- name: Display List of Files on Control Machine in /tmp
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display List of Files in a Path
+      ansible.builtin.shell: "ls -l /tmp"
+      register: files_list
+    - name: Display List of Files
+      debug:
+        var: files_list.stdout_lines
 
 #    - name: Send Email with CSV Attachment
 #      community.general.mail:
