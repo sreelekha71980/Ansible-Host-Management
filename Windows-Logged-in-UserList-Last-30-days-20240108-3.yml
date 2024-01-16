@@ -42,11 +42,11 @@
         $loginInfo | Format-Table # | Export-Csv -Path C:\path\to\output.csv -NoTypeInformation
       
       register: result  
-               
+                
 - name: Display result to Console
   hosts: localhost
   tasks:
-    -name: save output to file
+    - name: save output to file
      ansible.builtin.shell: |
        debug:
            var: result.stdout_lines >> userlogin.txt
