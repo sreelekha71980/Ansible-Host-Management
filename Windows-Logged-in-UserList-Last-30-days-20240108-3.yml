@@ -51,3 +51,9 @@
         debug:
           var: result.stdout_lines >> userlogin.txt
              
+    - name: Display List of Files in a Path
+      ansible.builtin.shell: "ls -lrt"
+      register: files_list
+    - name: Display List of Files
+      debug:
+        var: files_list.stdout_lines
