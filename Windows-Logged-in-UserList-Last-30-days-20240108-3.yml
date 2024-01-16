@@ -38,8 +38,8 @@
             }
         }, @{
             Name='Source-IP'; Expression={$_.Properties[18].Value}
-        } | Format-Table
-        $loginInfo
+        }
+        $loginInfo # | Export-Csv -Path C:\path\to\output.csv -NoTypeInformation
       
       register: result  
                
