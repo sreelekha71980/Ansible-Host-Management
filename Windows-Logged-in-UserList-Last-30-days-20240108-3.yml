@@ -47,7 +47,7 @@
   hosts: localhost
   tasks:
     - name: save output to file
-     ansible.builtin.shell: |
+     ansible.builtin.shell:
        debug:
            var: result.stdout_lines >> userlogin.txt
              
